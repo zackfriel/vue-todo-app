@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { defineProps } from 'vue'
+
 const props = defineProps<{
   item: {
     key: number
@@ -6,75 +8,25 @@ const props = defineProps<{
     checked: boolean
   }
   itemList: Array<{ key: number; title: string; checked: boolean }>
+  toggleCheck: (event: Event) => void
+  deleteItem: (event: Event) => void
+  editItem: (event: Event) => void
+  saveItem: (event: Event) => void
 }>()
-
-const { itemList } = props
-
-console.log('item list', itemList)
-
-const updateLocalStorage = (itemList: any) => {
-  localStorage.setItem('toDoList', JSON.stringify(itemList))
-}
-
-const updateItem = (itemKey: number, itemTitle?: string, itemChecked?: boolean) => {
-  const updatedList = itemList.map((item: any) => {
-    if (item.key === itemKey) {
-      if (itemTitle) {
-        return { ...item, title: itemTitle, checked: itemChecked }
-      }
-      return { ...item, checked: itemChecked }
-    }
-    return item
-  })
-  updateLocalStorage(updatedList)
-}
-
-const toggleCheck = (event: Event) => {
-  const checkbox = event.target as HTMLElement
-  const toDoItem = checkbox.closest('.to-do-item')
-  const title = toDoItem?.querySelector('.title') as HTMLInputElement
-  const key = (toDoItem as HTMLElement)?.dataset.key
-  if (toDoItem) {
-    toDoItem.classList.toggle('checked')
-    updateItem(Number(key), title.value, toDoItem.classList.contains('checked'))
-  }
-}
-
-const deleteItem = (event: Event) => {
-  const toDoItem = event.target as HTMLElement
-  const key = (toDoItem.closest('.to-do-item') as HTMLElement)?.dataset.key
-  const updatedList = itemList.filter((item: any) => item.key !== Number(key))
-  updateLocalStorage(updatedList)
-}
-
-const editItem = (event: Event) => {
-  const item = event.target as HTMLElement
-  const parentItem = item?.closest('.to-do-item')
-  parentItem?.classList.toggle('editing')
-  parentItem?.querySelector('.title')?.toggleAttribute('readonly')
-}
-
-const saveItem = (event: Event) => {
-  const item = event.target as HTMLElement
-  const parentItem = item?.closest('.to-do-item')
-  const key = (parentItem as HTMLElement)?.dataset.key
-  const title = parentItem?.querySelector('.title') as HTMLInputElement
-  updateItem(Number(key), title.value, parentItem?.classList.contains('checked'))
-  parentItem?.classList.toggle('editing')
-  title.toggleAttribute('readonly')
-}
 </script>
 
 <template>
   <div class="to-do-item" :class="{ checked: item.checked }" :data-key="item.key">
     <div class="to-do-item__item">
-      <button class="checkbox" v-on:click="toggleCheck"><span>✔️</span></button>
+      <button class="checkbox" v-on:click="props.toggleCheck"><span>✔️</span></button>
       <input class="title" readonly :value="item.title" />
     </div>
     <div class="to-do-item__tools">
-      <button class="edit" v-on:click="editItem"><span>✏️</span></button>
-      <button class="save" v-on:click="saveItem"><span>👍</span></button>
-      <button class="delete" v-on:click="deleteItem"><span>❌</span></button>
+      <button class="edit" v-on:click="props.editItem"><span>✏️</span></button>
+      <button class="save" v-on:click="props.saveItem"><span>👍</span></button>
+      <button class="delete" v-on:click="props.deleteItem" :data-key="item.key">
+        <span>❌</span>
+      </button>
     </div>
   </div>
 </template>

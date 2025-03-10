@@ -1,20 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
   itemList: Array<{ key: number; title: string; checked: boolean }>
+  addItem: () => void
 }>()
-
-const { itemList } = props
-
-const addItem = () => {
-  const toDoList = itemList
-  const newToDo = {
-    key: toDoList.length + 1,
-    title: 'New To Do',
-    checked: false,
-  }
-  toDoList.push(newToDo)
-  localStorage.setItem('toDoList', JSON.stringify(toDoList))
-}
 </script>
 
 <template>
