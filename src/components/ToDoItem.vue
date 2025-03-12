@@ -122,7 +122,7 @@ button {
 }
 
 .editing .save {
-  display: block;
+  display: flex;
 }
 
 .editing .edit {

@@ -1,21 +1,14 @@
 @import './base.css';
 
-#app {
-  padding: 2rem;
+:root {
+  --site-padding: 2rem;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+#app {
+  padding: var(--site-padding);
 }
 
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
   #app {
     display: flex;
     align-items: center;
